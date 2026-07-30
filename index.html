@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#18251c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Matching Words Battle</title>
+  <script src="./js/polyfills.js"></script>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <div class="bg-germs" aria-hidden="true">
+    <div class="germ" style="--size:220px; --x:4%; --y:16%; --dur:28s;"></div>
+    <div class="germ" style="--size:140px; --x:24%; --y:72%; --dur:22s;"></div>
+    <div class="germ" style="--size:180px; --x:42%; --y:8%; --dur:26s;"></div>
+    <div class="germ" style="--size:260px; --x:66%; --y:18%; --dur:30s;"></div>
+    <div class="germ" style="--size:150px; --x:84%; --y:68%; --dur:24s;"></div>
+    <div class="germ" style="--size:120px; --x:58%; --y:78%; --dur:20s;"></div>
+    <div class="germ" style="--size:96px; --x:78%; --y:6%; --dur:18s;"></div>
+  </div>
+  <div class="app">
+    <header class="topbar">
+      <div class="title-block">
+        <h1>Matching Words Battle</h1>
+      </div>
+      <div class="timer-display" aria-label="Game timer">
+        <span class="timer-label">Time Left</span>
+            <strong id="timerText">07:00</strong>
+      </div>
+      <div class="topbar-right">
+        <div class="pill">Total <strong id="deckCount">90</strong></div>
+        <div class="pill">Section <strong id="sectionText">A 1/10 | B 1/10</strong></div>
+        <div class="pill">Music <strong id="musicState">Off</strong></div>
+        <button class="control-btn" id="fullscreenBtn" type="button">Fullscreen</button>
+        <button class="control-btn" id="finishGameBtn" type="button">End The Game</button>
+        <button class="control-btn" id="restartBtn" type="button">New Battle</button>
+      </div>
+    </header>
+
+    <section class="focus-strip" aria-label="Grammar focus">
+      <article class="focus-card">
+        <img src="./assets/grammar-girl.png" alt="Girl grammar focus">
+        <div>
+          <span class="focus-label">Grammar Focus</span>
+          <strong>What&apos;s wrong with her?</strong>
+          <p>She has a fever. Her leg hurts. Her feet hurt. Does she have a...? Yes, she does. No, she doesn&apos;t.</p>
+        </div>
+      </article>
+      <article class="focus-card">
+        <img src="./assets/grammar-boy.png" alt="Boy grammar focus">
+        <div>
+          <span class="focus-label">Grammar Focus</span>
+          <strong>What&apos;s wrong with him?</strong>
+          <p>He has a fever. His leg hurts. His feet hurt. Does he have a...? Yes, he does. No, he doesn&apos;t.</p>
+        </div>
+      </article>
+      <article class="focus-card">
+        <img src="./assets/grammar-you.png" alt="You grammar focus">
+        <div>
+          <span class="focus-label">Grammar Focus</span>
+          <strong>What&apos;s wrong with you?</strong>
+          <p>I have a fever. My leg hurts. My feet hurt. Do you have a...? Yes, I do. No, I don&apos;t.</p>
+        </div>
+      </article>
+      <article class="focus-card">
+        <img src="./assets/grammar-them.png" alt="Them grammar focus">
+        <div>
+          <span class="focus-label">Grammar Focus</span>
+          <strong>What&apos;s wrong with them?</strong>
+          <p>They have a fever. Their legs hurt. Their feet hurt. Do they have a...? Yes, they do. No, they don&apos;t.</p>
+        </div>
+      </article>
+    </section>
+
+    <main class="battlefield">
+      <section class="arena arena-left" id="leftArena">
+        <div class="arena-germs" aria-hidden="true">
+          <div class="germ" style="--size:220px; --x:6%; --y:24%; --dur:18s;"></div>
+          <div class="germ" style="--size:170px; --x:58%; --y:14%; --dur:16s;"></div>
+          <div class="germ" style="--size:200px; --x:28%; --y:58%; --dur:20s;"></div>
+        </div>
+        <div class="answer-burst" id="leftBurst" aria-hidden="true">
+          <div class="answer-burst-inner">
+            <img id="leftBurstImage" src="./assets/ui/correct-beaker.png" alt="">
+            <div class="answer-burst-label" id="leftBurstLabel">Correct</div>
+          </div>
+        </div>
+        <div class="arena-head">
+          <div class="team-copy">
+            <div class="team-title-row">
+              <button class="control-btn arena-skip-btn" id="leftSkipBtn" type="button">Skip Section</button>
+              <h2>Team A</h2>
+              <div class="ready-tag" id="leftReady">Wins 0</div>
+            </div>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat">Score<strong id="leftScore">0</strong></div>
+          <div class="stat">Section<strong id="leftMatched">0/9</strong></div>
+          <div class="stat">Combo<strong id="leftCombo">0</strong></div>
+          <div class="stat">Left<strong id="leftLeft">9</strong></div>
+        </div>
+        <div class="play-zone" id="leftPlayZone">
+          <section class="panel picture-panel" id="leftPicturePanel">
+            <div class="panel-title">Pictures</div>
+            <div class="picture-grid" id="leftPictures"></div>
+          </section>
+          <section class="panel sentence-panel" id="leftSentencePanel">
+            <div class="panel-title">Sentences</div>
+            <div class="sentence-grid" id="leftSentences"></div>
+          </section>
+        </div>
+        <div class="status-line" id="leftStatus">Match fast and build a streak.</div>
+      </section>
+
+      <div class="divider">
+        <div class="vs-badge">VS</div>
+      </div>
+
+      <section class="arena arena-right" id="rightArena">
+        <div class="arena-germs" aria-hidden="true">
+          <div class="germ" style="--size:210px; --x:10%; --y:16%; --dur:17s;"></div>
+          <div class="germ" style="--size:180px; --x:62%; --y:22%; --dur:19s;"></div>
+          <div class="germ" style="--size:190px; --x:34%; --y:60%; --dur:15s;"></div>
+        </div>
+        <div class="answer-burst" id="rightBurst" aria-hidden="true">
+          <div class="answer-burst-inner">
+            <img id="rightBurstImage" src="./assets/ui/correct-beaker.png" alt="">
+            <div class="answer-burst-label" id="rightBurstLabel">Correct</div>
+          </div>
+        </div>
+        <div class="arena-head">
+          <div class="team-copy">
+            <div class="team-title-row">
+              <button class="control-btn arena-skip-btn" id="rightSkipBtn" type="button">Skip Section</button>
+              <h2>Team B</h2>
+              <div class="ready-tag" id="rightReady">Wins 0</div>
+            </div>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat">Score<strong id="rightScore">0</strong></div>
+          <div class="stat">Section<strong id="rightMatched">0/9</strong></div>
+          <div class="stat">Combo<strong id="rightCombo">0</strong></div>
+          <div class="stat">Left<strong id="rightLeft">9</strong></div>
+        </div>
+        <div class="play-zone" id="rightPlayZone">
+          <section class="panel picture-panel" id="rightPicturePanel">
+            <div class="panel-title">Pictures</div>
+            <div class="picture-grid" id="rightPictures"></div>
+          </section>
+          <section class="panel sentence-panel" id="rightSentencePanel">
+            <div class="panel-title">Sentences</div>
+            <div class="sentence-grid" id="rightSentences"></div>
+          </section>
+        </div>
+        <div class="status-line" id="rightStatus">The PPT deck is mirrored here for battle play.</div>
+      </section>
+    </main>
+  </div>
+
+  <section class="overlay show" id="introOverlay" aria-label="Game intro">
+    <div class="overlay-card">
+      <div class="intro-shell">
+        <div class="intro-left">
+          <span class="eyebrow">Slide 1 Cover Match</span>
+          <h2>Picture Meets Sentence</h2>
+          <p>Use the first slide&apos;s two logos to unlock the battle. Click <strong>Picture</strong> first, then click <strong>Sentence</strong>. That starts the music and opens the split-screen race.</p>
+          <div class="choice-grid">
+            <button class="choice-card" id="coverPictureBtn" type="button">
+              <img src="./assets/cover-picture.png" alt="Picture logo from the PPT cover">
+              <span>Picture</span>
+              <small>Click first</small>
+            </button>
+            <button class="choice-card" id="coverSentenceBtn" type="button">
+              <img src="./assets/cover-sentence.png" alt="Sentence logo from the PPT cover">
+              <span>Sentence</span>
+              <small>Click second</small>
+            </button>
+          </div>
+          <div class="intro-hint" id="introHint">Start by clicking <strong>Picture</strong>.</div>
+        </div>
+        <div class="intro-right">
+          <h3>Grammar Coach</h3>
+          <div class="coach-list">
+            <div class="coach-item">
+              <strong>Question Pattern</strong>
+              <p>What&apos;s wrong with her? What&apos;s wrong with him? What&apos;s wrong with you? What&apos;s wrong with them?</p>
+            </div>
+            <div class="coach-item">
+              <strong>Have Pattern</strong>
+              <p>She has a fever. He has a fever. I have a fever. They have a fever.</p>
+            </div>
+            <div class="coach-item">
+              <strong>Hurt Pattern</strong>
+              <p>Her leg hurts. His leg hurts. My leg hurts. Their legs hurt.</p>
+            </div>
+            <div class="coach-item">
+              <strong>Yes / No Pattern</strong>
+              <p>Does she have a...? Yes, she does. No, she doesn&apos;t. Do they have a...? Yes, they do. No, they don&apos;t.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="overlay" id="resultOverlay" aria-label="Game results">
+    <div class="confetti-layer confetti-layer-global" id="resultConfettiLayer" aria-hidden="true"></div>
+    <div class="overlay-card result-card">
+      <div class="result-stage">
+        <div class="result-content">
+          <div class="victory-stars" aria-hidden="true">
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+          </div>
+          <div class="trophy-wrap" aria-hidden="true">
+            <div class="trophy">🏆</div>
+          </div>
+          <span class="eyebrow">Battle Result</span>
+          <h3 id="resultTitle">Team A Wins</h3>
+          <p id="resultText">Team A matched more pairs from the PPT deck.</p>
+          <div class="result-actions">
+            <button class="control-btn" id="playAgainBtn" type="button">Play Again</button>
+          </div>
+          <div class="footer-note">Every image card in this game comes from the PowerPoint and keeps its transparent background.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="./js/game.js"></script>
+  <script nomodule src="./js/legacy-browser-warning.js"></script>
+</body>
+</html>
