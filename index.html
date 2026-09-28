@@ -255,6 +255,19 @@
     </div>
   </section>
 
+  <section class="finish-password-overlay" id="finishPasswordOverlay" aria-label="End game password" aria-hidden="true">
+    <form class="finish-password-panel" id="finishPasswordForm" role="dialog" aria-modal="true" aria-labelledby="finishPasswordTitle" aria-describedby="finishPasswordHint finishPasswordError">
+      <button class="finish-password-close" id="finishPasswordClose" type="button" aria-label="Close password panel">×</button>
+      <span class="finish-password-eyebrow">End The Game</span>
+      <h2 id="finishPasswordTitle">Enter the finish code</h2>
+      <p id="finishPasswordHint">Enter the code to end this battle and see the current scores.</p>
+      <label class="finish-password-label" for="finishPasswordInput">Password</label>
+      <input id="finishPasswordInput" name="finishCode" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" required>
+      <p class="finish-password-error" id="finishPasswordError" role="alert" aria-live="polite"></p>
+      <button class="finish-password-submit" type="submit">Submit Code</button>
+    </form>
+  </section>
+
   <script src="./js/game.js"></script>
   <script nomodule src="./js/legacy-browser-warning.js"></script>
 </body>

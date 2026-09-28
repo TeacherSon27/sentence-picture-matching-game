@@ -103,6 +103,7 @@ const SECTION_TEN_PICTURE_FIRST_POINTS = 24;
 const SECTION_TEN_SENTENCE_FIRST_POINTS = 15;
 const WRONG_MATCH_DEDUCTION = 3;
 const RESULT_CONFETTI_COUNT = 3000;
+const FINISH_GAME_CODE = "123";
 const SECTIONS = Array.from({ length: TOTAL_SECTIONS }, (_, index) =>
   ACTIVE_DECK.slice(index * SECTION_SIZE, (index + 1) * SECTION_SIZE)
 );
@@ -114,6 +115,11 @@ const refs = {
   musicState: document.getElementById("musicState"),
   fullscreenBtn: document.getElementById("fullscreenBtn"),
   finishGameBtn: document.getElementById("finishGameBtn"),
+  finishPasswordOverlay: document.getElementById("finishPasswordOverlay"),
+  finishPasswordForm: document.getElementById("finishPasswordForm"),
+  finishPasswordInput: document.getElementById("finishPasswordInput"),
+  finishPasswordError: document.getElementById("finishPasswordError"),
+  finishPasswordClose: document.getElementById("finishPasswordClose"),
   restartBtn: document.getElementById("restartBtn"),
   playAgainBtn: document.getElementById("playAgainBtn"),
   introOverlay: document.getElementById("introOverlay"),
@@ -429,8 +435,8 @@ function randomRange(min, max) {
 }
 
 function randomVelocity() {
-  const horizontal = randomRange(26, 54) * (Math.random() > 0.5 ? 1 : -1);
-  const vertical = randomRange(12, 28) * (Math.random() > 0.5 ? 1 : -1);
+  const horizontal = randomRange(90, 150) * (Math.random() > 0.5 ? 1 : -1);
+  const vertical = randomRange(55, 100) * (Math.random() > 0.5 ? 1 : -1);
   return { vx: horizontal, vy: vertical };
 }
 
@@ -1004,16 +1010,34 @@ function skipSection(side) {
   activateChallengeMotion();
 }
 
-async function finishGameNow() {
-  if (fullscreenElement()) {
-    await exitFullscreenIfNeeded();
-    await new Promise((resolve) => window.setTimeout(resolve, 180));
-  }
-  const code = window.prompt("Enter the finish code to end the game.");
-  if (code !== "143") {
-    window.alert("Incorrect code.");
+function openFinishPasswordPanel() {
+  refs.finishPasswordError.textContent = "";
+  refs.finishPasswordInput.value = "";
+  refs.finishPasswordOverlay.classList.add("show");
+  refs.finishPasswordOverlay.setAttribute("aria-hidden", "false");
+  window.setTimeout(() => refs.finishPasswordInput.focus(), 0);
+}
+
+function closeFinishPasswordPanel() {
+  refs.finishPasswordOverlay.classList.remove("show");
+  refs.finishPasswordOverlay.setAttribute("aria-hidden", "true");
+  refs.finishPasswordError.textContent = "";
+  refs.finishGameBtn.focus();
+}
+
+function finishGameNow() {
+  openFinishPasswordPanel();
+}
+
+function submitFinishPassword(event) {
+  event.preventDefault();
+  if (refs.finishPasswordInput.value !== FINISH_GAME_CODE) {
+    refs.finishPasswordError.textContent = "Incorrect code. Please try again.";
+    refs.finishPasswordInput.value = "";
+    refs.finishPasswordInput.focus();
     return;
   }
+  closeFinishPasswordPanel();
   const playedSections = Math.max(
     state.players.left.completedSections.size + (playerDone(state.players.left) ? 0 : 1),
     state.players.right.completedSections.size + (playerDone(state.players.right) ? 0 : 1),
@@ -1236,6 +1260,16 @@ refs.right.skipBtn.addEventListener("click", () => {
 refs.finishGameBtn.addEventListener("click", () => {
   ensureAudioRunning();
   finishGameNow();
+});
+refs.finishPasswordForm.addEventListener("submit", submitFinishPassword);
+refs.finishPasswordClose.addEventListener("click", closeFinishPasswordPanel);
+refs.finishPasswordOverlay.addEventListener("click", (event) => {
+  if (event.target === refs.finishPasswordOverlay) closeFinishPasswordPanel();
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && refs.finishPasswordOverlay.classList.contains("show")) {
+    closeFinishPasswordPanel();
+  }
 });
 refs.fullscreenBtn.addEventListener("click", () => {
   ensureAudioRunning();
